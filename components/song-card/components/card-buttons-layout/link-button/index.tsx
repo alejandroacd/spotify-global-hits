@@ -14,6 +14,7 @@ export default function LinkButton({ link }: { link: string }) {
                  <Link
                 href={link}
                 target="_blank"
+                aria-label="Abrir la página de la canción en una nueva pestaña"
             >
                 <ExternalLink size={20} />
             </Link>

@@ -41,22 +41,29 @@ export const LikeButton = ({ trackId, likedStatus, initialLiked }: LikeButtonPro
 
     return (
         <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger aria-label={isLiked ? 'Unlike song' : 'Like song'}> <div
-                    className={`${isLiked ? 'text-[#4ade80]' : 'text-white'} rounded-full px-2 py-2 hover:bg-black hover:text-[#4ade80] transition-all duration-250 ease`}
-                    onClick={handleLikeClick}
-                    aria-label={isLiked ? 'Unlike song' : 'Like song'}
-                >
-                    <Heart
-                        fill={isLiked ? '#4ade80' : 'none'}
-                        size={20}
-                    />
-                </div></TooltipTrigger>
-                <TooltipContent>
-                    <p>{isLiked ? 'Unlike' : 'Like'}</p>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+    <Tooltip>
+        <TooltipTrigger>
+            <div
+                role="button"
+                onClick={handleLikeClick}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        handleLikeClick(e as unknown as React.MouseEvent);
+                    }
+                }}
+                tabIndex={0}  // Hace que el div sea focoable
+                aria-label={isLiked ? 'Unlike song' : 'Like song'}
+                className={`${isLiked ? 'text-[#4ade80]' : 'text-white'} rounded-full px-2 py-2 hover:bg-black hover:text-[#4ade80] transition-all duration-250 ease`}
+            >
+                <Heart fill={isLiked ? '#4ade80' : 'none'} size={20} />
+            </div>
+        </TooltipTrigger>
+        <TooltipContent>
+            <p>{isLiked ? 'Unlike' : 'Like'}</p>
+        </TooltipContent>
+    </Tooltip>
+</TooltipProvider>
+
 
     )
 }
