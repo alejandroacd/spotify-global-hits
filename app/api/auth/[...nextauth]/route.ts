@@ -1,5 +1,5 @@
 // app/api/auth/[...nextauth]/route.ts
-import NextAuth from "next-auth";
+import NextAuth, { type JWT } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 
 // Type declarations
@@ -9,6 +9,7 @@ declare module "next-auth" {
   }
   
   interface JWT {
+    [key: string]: unknown;
     accessToken?: string;
     refreshToken?: string;
     accessTokenExpires?: number;
@@ -16,14 +17,26 @@ declare module "next-auth" {
   }
 }
 
+interface SpotifyTokenResponse {
+  access_token: string;
+  expires_in: number;
+  refresh_token?: string;
+  token_type: string;
+  scope: string;
+}
+
 const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 
-async function refreshAccessToken(token: { refreshToken?: string; [key: string]: any }) {
-  try {
-    const basicAuth = Buffer.from(
-      `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
-    ).toString("base64");
+async function refreshAccessToken(token: JWT): Promise<JWT> {
+  if (typeof token.refreshToken !== 'string') {
+    throw new Error("No valid refresh token available");
+  }
 
+  const basicAuth = Buffer.from(
+    `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+  ).toString("base64");
+
+  try {
     const response = await fetch(SPOTIFY_TOKEN_URL, {
       method: "POST",
       headers: {
@@ -32,18 +45,20 @@ async function refreshAccessToken(token: { refreshToken?: string; [key: string]:
       },
       body: new URLSearchParams({
         grant_type: "refresh_token",
-        refresh_token: token.refreshToken || "",
+        refresh_token: token.refreshToken,
       }),
     });
 
-    const data = await response.json();
+    const data: SpotifyTokenResponse = await response.json();
 
-    if (!response.ok) throw data;
+    if (!response.ok) {
+      throw data;
+    }
 
     return {
       ...token,
       accessToken: data.access_token,
-      accessTokenExpires: Date.now() + Number(data.expires_in) * 1000,
+      accessTokenExpires: Date.now() + data.expires_in * 1000,
       refreshToken: data.refresh_token ?? token.refreshToken,
     };
   } catch (error) {
@@ -70,18 +85,21 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, account }) {
-      if (account) {
+      if (account?.access_token && account.refresh_token && account.expires_in) {
+        const expiresIn = Number(account.expires_in);
+        if (isNaN(expiresIn)) {
+          throw new Error("Invalid expires_in value");
+        }
+        
         return {
           ...token,
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
-          accessTokenExpires: Date.now() + Number(account.expires_in ?? 3600) * 1000,
+          accessTokenExpires: Date.now() + expiresIn * 1000,
         };
       }
 
-      // Type guard to ensure accessTokenExpires is a number
-      if (token.accessTokenExpires && typeof token.accessTokenExpires === 'number' && 
-          Date.now() < token.accessTokenExpires) {
+      if (typeof token.accessTokenExpires === 'number' && Date.now() < token.accessTokenExpires) {
         return token;
       }
 
