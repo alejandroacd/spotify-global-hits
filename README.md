@@ -1,5 +1,7 @@
 ## 00's Spotify Global Hits: Save your favorites 🎵
 This web app lets you explore and enjoy a public Spotify playlist featuring the top global hits from the 2000s. Built using the Spotify Web API, the app allows users to browse the playlist freely and, if they choose to connect their Spotify account, like songs to save them directly to their Liked Songs library.
+[🔗 Live Demo](https://00s-global-hits.netlify.app)
+![image](https://github.com/user-attachments/assets/4bcc19d4-11a8-439d-8025-82b8f96af934)
 
 
 ## Features and key points ✨
