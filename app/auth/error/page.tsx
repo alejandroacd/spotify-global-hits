@@ -3,14 +3,16 @@
 
 import Link from "next/link";
 
-interface ErrorPageProps {
-  params: object;
-  searchParams: {
-    error?: string;
-  };
-}
+type ErrorPageProps = {
+  searchParams: Record<string, string | string[] | undefined>;
+};
 
 export default function ErrorPage({ searchParams }: ErrorPageProps) {
+  // Extract error code safely
+  const errorCode = Array.isArray(searchParams.error) 
+    ? searchParams.error[0] 
+    : searchParams.error;
+
   const errorMessages: Record<string, string> = {
     RefreshAccessTokenError: 'Your session expired. Please sign in again.',
     Callback: 'Authentication failed. Please try again.',
@@ -19,7 +21,8 @@ export default function ErrorPage({ searchParams }: ErrorPageProps) {
     default: 'An unknown authentication error occurred.',
   };
 
-  const error = searchParams?.error || 'default';
+  // Get the message or fallback to default
+  const message = errorCode ? errorMessages[errorCode] || errorMessages.default : errorMessages.default;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
@@ -28,7 +31,7 @@ export default function ErrorPage({ searchParams }: ErrorPageProps) {
           Authentication Error
         </h1>
         <p className="mb-6 text-gray-700">
-          {errorMessages[error]}
+          {message}
         </p>
         <Link
           href="/api/auth/signin"
