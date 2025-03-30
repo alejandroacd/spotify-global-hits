@@ -1,8 +1,5 @@
 const config = {
-  plugins: ["@tailwindcss/postcss"],
-  corePlugins: {
-    backgroundClip: true,
-  },
+  plugins: ["@tailwindcss/postcss"]
 };
 
 export default config;

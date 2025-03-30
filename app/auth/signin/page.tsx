@@ -23,10 +23,3 @@ export default function SignIn({ providers }: { providers: any }) {
         </div>
     );
 }
-
-export async function getServerSideProps() {
-    const providers = await getProviders();
-    return {
-        props: { providers },
-    };
-}
