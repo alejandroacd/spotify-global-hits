@@ -2,7 +2,6 @@
 import NextAuth, { type JWT } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 
-// Type declarations
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
@@ -28,15 +27,15 @@ interface SpotifyTokenResponse {
 const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 
 async function refreshAccessToken(token: JWT): Promise<JWT> {
-  if (typeof token.refreshToken !== 'string') {
-    throw new Error("No valid refresh token available");
-  }
-
-  const basicAuth = Buffer.from(
-    `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
-  ).toString("base64");
-
   try {
+    if (typeof token.refreshToken !== 'string') {
+      return { ...token, error: "NoRefreshToken" };
+    }
+
+    const basicAuth = Buffer.from(
+      `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+    ).toString("base64");
+
     const response = await fetch(SPOTIFY_TOKEN_URL, {
       method: "POST",
       headers: {
@@ -62,7 +61,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
       refreshToken: data.refresh_token ?? token.refreshToken,
     };
   } catch (error) {
-    console.error("Error refreshing access token", error);
+    console.error("Refresh token error:", error);
     return {
       ...token,
       error: "RefreshAccessTokenError",
@@ -85,12 +84,8 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, account }) {
-      if (account?.access_token && account.refresh_token && account.expires_in) {
-        const expiresIn = Number(account.expires_in);
-        if (isNaN(expiresIn)) {
-          throw new Error("Invalid expires_in value");
-        }
-        
+      if (account) {
+        const expiresIn = typeof account.expires_in === 'number' ? account.expires_in : 3600;
         return {
           ...token,
           accessToken: account.access_token,
@@ -99,6 +94,7 @@ const handler = NextAuth({
         };
       }
 
+      // Type-safe expiration check
       if (typeof token.accessTokenExpires === 'number' && Date.now() < token.accessTokenExpires) {
         return token;
       }
@@ -111,6 +107,9 @@ const handler = NextAuth({
       }
       return session;
     },
+  },
+  pages: {
+    error: "/auth/error",
   },
 });
 
