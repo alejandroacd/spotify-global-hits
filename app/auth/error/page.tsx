@@ -3,17 +3,23 @@
 
 import Link from "next/link";
 
-type ErrorPageProps = {
-  searchParams: Record<string, string | string[] | undefined>;
-};
+type ErrorCode = 
+  | 'RefreshAccessTokenError' 
+  | 'Callback' 
+  | 'NoRefreshToken' 
+  | 'OAuthAccountNotLinked'
+  | 'default';
 
-export default function ErrorPage({ searchParams }: ErrorPageProps) {
-  // Extract error code safely
-  const errorCode = Array.isArray(searchParams.error) 
-    ? searchParams.error[0] 
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const error = Array.isArray(searchParams.error) 
+    ? searchParams.error[0]
     : searchParams.error;
 
-  const errorMessages: Record<string, string> = {
+  const errorMessages: Record<ErrorCode, string> = {
     RefreshAccessTokenError: 'Your session expired. Please sign in again.',
     Callback: 'Authentication failed. Please try again.',
     NoRefreshToken: 'Session expired. Please sign in again.',
@@ -21,8 +27,13 @@ export default function ErrorPage({ searchParams }: ErrorPageProps) {
     default: 'An unknown authentication error occurred.',
   };
 
-  // Get the message or fallback to default
-  const message = errorCode ? errorMessages[errorCode] || errorMessages.default : errorMessages.default;
+  // Type-safe error message lookup
+  const getErrorMessage = (code: string | undefined): string => {
+    if (!code) return errorMessages.default;
+    return errorMessages[code as ErrorCode] || errorMessages.default;
+  };
+
+  const message = getErrorMessage(error);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
