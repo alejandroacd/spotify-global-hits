@@ -6,6 +6,7 @@ export interface Artist {
   
   export interface Album {
     images: { url: string }[];
+    name: string;
     // Add other album properties if needed
   }
   
@@ -15,6 +16,10 @@ export interface Artist {
         name: string;
         artists: Artist[];
         album: Album;
-    }
+        external_urls: {
+            spotify: string
+        }
+        duration_ms: number
+      }
     // Add other track properties if needed
   }

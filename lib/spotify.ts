@@ -1,7 +1,7 @@
 import { Track } from "@/types/index";
 export const getToken = async () => {
-        const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
-        const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
+        const clientId = process.env.SPOTIFY_CLIENT_ID;
+        const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
         if (!clientId || !clientSecret) {
             throw new Error('Spotify client ID or secret is missing.');
@@ -21,7 +21,6 @@ export const getToken = async () => {
         if (!response.ok) {
             throw new Error('Failed to fetch Spotify token');
         }
-
         const data = await response.json();
         return data.access_token as string;
     }
@@ -44,3 +43,40 @@ export const getTopTracks = async (token: string | Promise<string>) => {
       const data = await response.json();
       return data.tracks.items as Track[];
 }
+
+export const toggleSaveTrack = async (token: string, trackId: string, isCurrentlySaved: boolean) => {
+  try {
+    const method = isCurrentlySaved ? 'delete' : 'put';
+    const response = await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
+      method,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.ok;
+  } catch (error) {
+    console.error('Error toggling track save:', error);
+    throw new Error('Failed to toggle track save');
+  }
+};
+
+export const checkSavedTracks = async (token: string, trackIds: string[]) => {
+  try {
+    const url = new URL('https://api.spotify.com/v1/me/tracks/contains');
+    url.searchParams.append('ids', trackIds.slice(0, 50).join(',')); 
+
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json() as boolean[];
+  } catch (error) {
+    console.error('Error checking saved tracks:', error);
+    throw new Error('Failed to check saved tracks');
+  }
+};

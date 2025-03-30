@@ -1,22 +1,47 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Image from "next/image"
+import { Card } from "@/components/ui/card"
+import CardImage from "./components/card-image";
+import { SongName } from "./components/card-header";
+import CardInfoItems from "./components/card-info-items";
+import CardButtonsLayout from "./components/card-buttons-layout";
+import CardContentLayout from "./components/card-content-layout";
+
 interface SongCardProps {
-    image: string
-    songName: string
-    artistName: string
+  image: string
+  songName: string
+  artistName: string
+  albumName: string
+  link: string
+  songDuration: number,
+  trackId: string,
+  initialLiked?: boolean
+  likedStatus: Record<string, boolean>
 }
-export const SongCard = ({image, songName, artistName}: SongCardProps) => {
-    return (
-        <Card className="rounded-md shadow-lg pb-6 gap-0 h-[450px] border-none   bg-zinc-800/70 md:w-[350px] py-0 md:min-h-[550px] md:h-[550px]">
-         <Image src={image} alt="card" width={350} height={350}  className="object-fit mx-auto lg:w-full md:w-3/4 rounded-t-md object-center"/>
-         <section className="px-3 ">
-         <CardHeader className="p-0 my-3">
-         <CardTitle>{songName}</CardTitle>
-         </CardHeader>
-         <CardContent className="p-0">
-            <p>{artistName}</p>
-         </CardContent>
-         </section>
-         </Card>
-    )
-}
+
+export default  function SongCard  ({
+  image,
+  songName,
+  artistName,
+  link,
+  albumName,
+  songDuration,
+  trackId,
+  initialLiked = false,
+  likedStatus
+}: SongCardProps) {
+
+  return (
+    <Card className="hover:translate-y-[-10px] z-20 cursor-pointer transition-all duration-250 hover:border-[#4ade80] ease rounded-xl shadow-lg pb-6 gap-0 h-[520px] border-transparent bg-zinc-800/70 md:w-[350px] py-0 md:min-h-[590px] md:h-[590px]">
+      <CardImage image={image} />
+      <CardContentLayout>
+        <SongName songName={songName} />
+        <CardInfoItems artistName={artistName} albumName={albumName} duration={songDuration} />
+        <CardButtonsLayout
+          link={link}
+          likedStatus={likedStatus}
+          trackId={trackId}
+          initialLiked={initialLiked}
+        />
+      </CardContentLayout>
+    </Card>
+  );
+};
