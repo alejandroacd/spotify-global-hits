@@ -1,7 +1,6 @@
 // app/auth/error/page.tsx
 'use client';
 import Link from "next/link";
-import { type ErrorProps } from "next/error";
 
 export default function ErrorPage({
   searchParams,
