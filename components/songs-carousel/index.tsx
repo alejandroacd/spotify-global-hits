@@ -33,8 +33,8 @@ export function CarouselSongs({ tracks }: { tracks: Track[] }) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="text-[#4ade80] border-transparent bg-zinc-800/90" />
-        <CarouselNext className="text-[#4ade80] border-transparent bg-zinc-800/90" />
+        <CarouselPrevious aria-label="Previous slide" className="text-[#4ade80] border-transparent bg-zinc-800/90" />
+        <CarouselNext aria-label="Next slide" className="text-[#4ade80] border-transparent bg-zinc-800/90" />
       </Carousel>
 
 

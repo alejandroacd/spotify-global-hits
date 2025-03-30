@@ -42,7 +42,7 @@ export const LikeButton = ({ trackId, likedStatus, initialLiked }: LikeButtonPro
     return (
         <TooltipProvider>
             <Tooltip>
-                <TooltipTrigger> <div
+                <TooltipTrigger aria-label={isLiked ? 'Unlike song' : 'Like song'}> <div
                     className={`${isLiked ? 'text-[#4ade80]' : 'text-white'} rounded-full px-2 py-2 hover:bg-black hover:text-[#4ade80] transition-all duration-250 ease`}
                     onClick={handleLikeClick}
                     aria-label={isLiked ? 'Unlike song' : 'Like song'}
@@ -53,7 +53,7 @@ export const LikeButton = ({ trackId, likedStatus, initialLiked }: LikeButtonPro
                     />
                 </div></TooltipTrigger>
                 <TooltipContent>
-                    <p>Add to your library</p>
+                    <p>{isLiked ? 'Unlike' : 'Like'}</p>
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

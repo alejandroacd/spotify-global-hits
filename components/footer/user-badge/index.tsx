@@ -11,8 +11,8 @@ export default function UserBadge() {
     <div className="flex flex-col items-center  justify-center gap-1">
       <div onClick={user?.name ? () => { } : () => login()} className="inline-flex items-center cursor-pointer rounded-full">
         <DropdownMenu>
-          <DropdownMenuTrigger className="cursor-pointer" asChild >
-            <button className="flex items-center bg-zinc-800/85 gap-2 px-3 py-1.5 rounded-full bg-zinc-800  transition-colors">
+          <DropdownMenuTrigger aria-label="User menu 1" className="cursor-pointer" asChild >
+            <button aria-label="User menu" className="flex items-center bg-zinc-800/85 gap-2 px-3 py-1.5 rounded-full bg-zinc-800  transition-colors">
               <Avatar className="h-6 w-6 ">
                 <AvatarImage src={user?.image ? user?.image : "/spotifylogo.svg"} alt={"ad"} />
                 <AvatarFallback className="text-xs"></AvatarFallback>
@@ -22,7 +22,7 @@ export default function UserBadge() {
             </button>
           </DropdownMenuTrigger>
           {user?.name && <DropdownMenuContent className="text-white w-59 bg-zinc-800 hover:bg-zinc-900" align="end">
-            <DropdownMenuItem onClick={() => logout()} className="cursor-pointer">
+            <DropdownMenuItem aria-label="Logout" onClick={() => logout()} className="cursor-pointer">
               <LogOut className="mr-2 h-4 w-4 text-white" color="#4ade80" />
               <span>Logout</span>
             </DropdownMenuItem>
