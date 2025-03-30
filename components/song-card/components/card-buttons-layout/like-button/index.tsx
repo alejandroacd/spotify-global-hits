@@ -19,7 +19,7 @@ export const LikeButton = ({ trackId, likedStatus, initialLiked }: LikeButtonPro
         if (likedStatus[trackId] !== undefined) {
             setOptimisticLiked(null);
         }
-    }, [likedStatus[trackId], trackId]);
+    }, [likedStatus, trackId]);
 
     const handleLikeClick = async (e: React.MouseEvent) => {
         e.preventDefault();
