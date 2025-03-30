@@ -2,7 +2,7 @@
 import { getProviders, signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 
-export default async function SignIn({ providers }: { providers: any }) {
+export default  function SignIn({ providers }: { providers: any }) {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
             <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
