@@ -1,8 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 00's Spotify Global Hits: Save your favorites 🎵
+This web app lets you explore and enjoy a public Spotify playlist featuring the top global hits from the 2000s. Built using the Spotify Web API, the app allows users to browse the playlist freely and, if they choose to connect their Spotify account, like songs to save them directly to their Liked Songs library.
 
-## Getting Started
 
-First, run the development server:
+## Features and key points ✨
+
+ - 🔗  Spotify Integration: Connect your Spotify account, getting authenticated (using NextAuth.js in the background), to interact with the playlist. You can like it, and it will be added to your Liked Songs library. This feature includes handling tokens and automatic token refresh.
+
+- ❤️ Save Your Favorites:  Like songs, and they’ll be added to your personal Liked Songs library on Spotify. It uses the Spotify Web API to make a PUT request (only if you are authenticated). It includes optimistic UI and a minimalistic notification system to create a smooth experience for the user.
+
+- 🌀 Interactive Carousel: Navigate through the playlist smoothly with an interactive carousel for an engaging browsing experience.
+
+## Tech stack 🛠️ 
+- TypeScript
+- Next.js 15
+- NextAuth.js (for authentication)
+- Spotify Web API
+- Shadcn
+- Tailwind CSS
+
+## Installation 🚀
+ Prerequisites: 
+ - Node.js (https://nodejs.org) (Latest version recommended)
+ - Spotify Developer Account (https://developer.spotify.com/documentation/web-api/tutorials/getting-started)
+
+### 1.- Clone the repository
+
+```bash
+git clone https://github.com/alejandroacd/spotify-global-hits.git
+cd spotify-global-hits
+```
+
+
+### 2.- Install dependencies
+
+ 
+```bash
+npm install
+# or 
+pnpm install
+# you can use bun, yarn or whatever you want too
+```
+
+### 3.- Setup enviroment variables
+- Create a .env.local file in the root of the project
+- Add the following variables (you need a Spotify API key):
+
+```bash
+# .env.local
+NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your_spotify_client_id
+NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+NEXTAUTH_SECRET=openssl rand -base64 32
+NEXTAUTH_URL=http://localhost:3000
+```
+
+### 4.- Run the development server
 
 ```bash
 npm run dev
@@ -14,23 +65,5 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4.- Ualáaa ✨✨✨
+The app should now be running at http://localhost:3000 🚀
