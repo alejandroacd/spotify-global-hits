@@ -2,15 +2,15 @@
 'use client';
 
 import Link from "next/link";
-import { type NextPage } from "next";
 
 interface ErrorPageProps {
+  params: object;
   searchParams: {
     error?: string;
   };
 }
 
-const ErrorPage: NextPage<ErrorPageProps> = ({ searchParams }) => {
+export default function ErrorPage({ searchParams }: ErrorPageProps) {
   const errorMessages: Record<string, string> = {
     RefreshAccessTokenError: 'Your session expired. Please sign in again.',
     Callback: 'Authentication failed. Please try again.',
@@ -39,6 +39,4 @@ const ErrorPage: NextPage<ErrorPageProps> = ({ searchParams }) => {
       </div>
     </div>
   );
-};
-
-export default ErrorPage;
+}
